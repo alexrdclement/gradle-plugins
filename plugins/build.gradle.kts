@@ -62,6 +62,10 @@ gradlePlugin {
             id = "com.alexrdclement.gradle.plugin.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
+        register("androidBaselineProfileConsumer") {
+            id = "com.alexrdclement.gradle.plugin.android.baselineprofile.consumer"
+            implementationClass = "AndroidBaselineProfileConsumerConventionPlugin"
+        }
         register("androidLibraryCompose") {
             id = "com.alexrdclement.gradle.plugin.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
