@@ -35,6 +35,7 @@ dependencies {
     implementation(alexrdclementPluginLibs.shipkit.autoversion.plugin)
     implementation(alexrdclementPluginLibs.shipkit.changelog.plugin)
     implementation(alexrdclementPluginLibs.maven.publish.plugin)
+    implementation(alexrdclementPluginLibs.firebase.testlab.plugin)
 
     testImplementation(alexrdclementPluginLibs.junit.jupiter)
     testImplementation(alexrdclementPluginLibs.junit.platform.launcher)
@@ -65,6 +66,10 @@ gradlePlugin {
         register("androidBaselineProfileConsumer") {
             id = "com.alexrdclement.gradle.plugin.android.baselineprofile.consumer"
             implementationClass = "AndroidBaselineProfileConsumerConventionPlugin"
+        }
+        register("androidBaselineProfileGenerator") {
+            id = "com.alexrdclement.gradle.plugin.android.baselineprofile.generator"
+            implementationClass = "AndroidBaselineProfileGeneratorConventionPlugin"
         }
         register("androidLibraryCompose") {
             id = "com.alexrdclement.gradle.plugin.android.library.compose"
