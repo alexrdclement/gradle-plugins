@@ -4,6 +4,7 @@ import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.register
+import java.io.File
 
 /**
  * Convention plugin for baseline profile generator test modules using Firebase Test Lab.
@@ -122,9 +123,9 @@ class AndroidBaselineProfileGeneratorConventionPlugin : Plugin<Project> {
                     }
                 }
 
-                // Create task to copy baseline profiles from FTL results to expected location
+                // Create task to copy baseline profiles from FTL results to intermediate location
                 tasks.register<Copy>("copyBaselineProfilesFromFtl") {
-                    description = "Copies baseline profiles from Firebase Test Lab results to expected location"
+                    description = "Copies baseline profiles from Firebase Test Lab results to build output"
                     group = "baseline profile"
 
                     val testResultsDir = layout.buildDirectory.dir(
@@ -150,27 +151,70 @@ class AndroidBaselineProfileGeneratorConventionPlugin : Plugin<Project> {
                     }
                 }
 
-                tasks.configureEach {
-                    if (name == "${extension.deviceName}NonMinifiedReleaseAndroidTest") {
-                        finalizedBy("copyBaselineProfilesFromFtl")
-                    }
-                    if (name == "collectNonMinifiedReleaseBaselineProfile") {
-                        dependsOn("copyBaselineProfilesFromFtl")
+                // Wire up the FTL test task to copy results after completion
+                tasks.named("${extension.deviceName}NonMinifiedReleaseAndroidTest") {
+                    finalizedBy("copyBaselineProfilesFromFtl")
+                }
 
-                        // Optionally wire up to library's copyBaselineProfile task
-                        extension.copyToLibrary?.let { libraryProject ->
-                            finalizedBy("$libraryProject:copyBaselineProfile")
+                // Create simplified mergeBaselineProfiles task that bypasses the problematic collect task
+                tasks.register<Copy>("mergeBaselineProfiles") {
+                    description = "Merges baseline profiles from FTL output (simplified, bypasses collect task)"
+                    group = "baseline profile"
+
+                    // Source: FTL output directory
+                    val ftlOutputDir = layout.buildDirectory.dir(
+                        "outputs/managed_device_android_test_additional_output/${extension.deviceName}"
+                    )
+
+                    // Determine destination based on target project
+                    val targetProjectPath = androidExtension.targetProjectPath
+                    val dest = when {
+                        // Library module - copy to library's src directory
+                        extension.copyToLibrary != null -> {
+                            val libProject = project(extension.copyToLibrary!!)
+                            libProject.layout.projectDirectory.dir("src/androidMain/generated/baselineProfiles")
                         }
+                        // App module - copy to app's release directory
+                        targetProjectPath != null -> {
+                            val appProject = project(targetProjectPath)
+                            appProject.layout.projectDirectory.dir("src/release/generated/baselineProfiles")
+                        }
+                        else -> {
+                            throw IllegalStateException("Either targetProjectPath or copyToLibrary must be set")
+                        }
+                    }
+
+                    from(ftlOutputDir) {
+                        include("*.txt")
+                        // Exclude timestamped files (format: *-YYYY-MM-DD-HH-MM-SS.txt)
+                        // Only use the canonical non-timestamped versions
+                        exclude("*-????-??-??-??-??-??.txt")
+                        // Rename -startup-prof.txt to startup-prof.txt (remove test name prefix)
+                        rename { filename ->
+                            when {
+                                filename.contains("-startup-prof.txt") -> "startup-prof.txt"
+                                filename.contains("-baseline-prof.txt") -> "baseline-prof.txt"
+                                else -> filename
+                            }
+                        }
+                    }
+
+                    into(dest)
+
+                    dependsOn("copyBaselineProfilesFromFtl")
+
+                    doFirst {
+                        dest.asFile.mkdirs()
                     }
                 }
 
-                // Create a device-agnostic task for convenience
+                // Create a device-agnostic task for convenience - skips the problematic collect task
                 tasks.register("generateBaselineProfile") {
-                    description = "Generates baseline profiles using Firebase Test Lab (device-agnostic wrapper)"
+                    description = "Generates baseline profiles using Firebase Test Lab (simplified workflow)"
                     group = "baseline profile"
 
                     dependsOn("${extension.deviceName}NonMinifiedReleaseAndroidTest")
-                    finalizedBy("collectNonMinifiedReleaseBaselineProfile")
+                    finalizedBy("mergeBaselineProfiles")
                 }
             }
         }
