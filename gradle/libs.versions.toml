@@ -26,7 +26,7 @@ shipkit-changelog = "2.0.1"
 android-gradle-plugin = { group = "com.android.tools.build", name = "gradle", version.ref = "agp" }
 android-kotlin-multiplatform-library-plugin = { group = "com.android.kotlin.multiplatform.library", name = "com.android.kotlin.multiplatform.library.gradle.plugin", version.ref = "agp" }
 android-tools-common = { group = "com.android.tools", name = "common", version.ref = "android-tools" }
-androidx-baselineprofile = { group = "androidx.baselineprofile", name = "baselineprofile", version.ref = "androidx-baselineprofile" }
+androidx-baselineprofile-plugin = { group = "androidx.baselineprofile", name = "androidx.baselineprofile.gradle.plugin", version.ref = "androidx-baselineprofile" }
 firebase-testlab-plugin = { group = "com.google.firebase.testlab", name = "com.google.firebase.testlab.gradle.plugin", version.ref = "firebase-testlab" }
 jetbrains-compose = { group = "org.jetbrains.compose", name = "compose-gradle-plugin", version.ref = "compose-multiplatform" }
 kotlin-gradle-plugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }

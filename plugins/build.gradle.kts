@@ -24,6 +24,7 @@ dependencies {
     implementation(alexrdclementPluginLibs.android.gradle.plugin)
     implementation(alexrdclementPluginLibs.android.kotlin.multiplatform.library.plugin)
     implementation(alexrdclementPluginLibs.android.tools.common)
+    implementation(alexrdclementPluginLibs.androidx.baselineprofile.plugin)
     implementation(alexrdclementPluginLibs.jetbrains.compose)
     implementation(alexrdclementPluginLibs.compose.compiler.plugin)
     implementation(alexrdclementPluginLibs.kotlin.gradle.plugin)
