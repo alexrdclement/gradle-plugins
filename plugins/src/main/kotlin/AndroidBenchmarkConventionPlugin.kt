@@ -41,6 +41,7 @@ import org.gradle.kotlin.dsl.register
  *     deviceName = "pixel5Api34Ftl"
  *     deviceType = "akita"  // Physical device
  *     apiLevel = 34
+ *     resultsDir = "results"  // Relative to benchmark module
  * }
  *
  * // Configure Firebase Test Lab (references extension values to avoid duplication)
@@ -111,10 +112,11 @@ class AndroidBenchmarkConventionPlugin : Plugin<Project> {
                         includeEmptyDirs = false
                     }
 
-                    into(project.rootProject.layout.projectDirectory.dir("benchmark-results"))
+                    val resultsDir = layout.projectDirectory.dir(extension.resultsDir)
+                    into(resultsDir)
 
                     doFirst {
-                        project.rootProject.layout.projectDirectory.dir("benchmark-results").asFile.mkdirs()
+                        resultsDir.asFile.mkdirs()
                     }
                 }
 
@@ -139,4 +141,5 @@ open class BenchmarkExtension {
     var deviceName: String = "pixel8aApi34Ftl"
     var deviceType: String = "akita"
     var apiLevel: Int = 34
+    var resultsDir: String = "results"
 }
