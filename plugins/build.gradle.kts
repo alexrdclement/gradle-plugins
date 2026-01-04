@@ -72,6 +72,10 @@ gradlePlugin {
             id = "com.alexrdclement.gradle.plugin.android.baselineprofile.generator"
             implementationClass = "AndroidBaselineProfileGeneratorConventionPlugin"
         }
+        register("androidBenchmark") {
+            id = "com.alexrdclement.gradle.plugin.android.benchmark"
+            implementationClass = "AndroidBenchmarkConventionPlugin"
+        }
         register("androidLibraryCompose") {
             id = "com.alexrdclement.gradle.plugin.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
