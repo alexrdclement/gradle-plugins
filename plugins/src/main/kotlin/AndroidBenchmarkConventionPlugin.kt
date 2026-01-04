@@ -141,8 +141,8 @@ class AndroidBenchmarkConventionPlugin : Plugin<Project> {
 
 open class BenchmarkExtension {
     var buildType: String = "benchmarkRelease"
-    var deviceName: String = "pixel8aApi34Ftl"
+    var deviceName: String = "pixel8aApi35Ftl"
     var deviceType: String = "akita"
-    var apiLevel: Int = 34
+    var apiLevel: Int = 35
     var resultsDir: String = "results"
 }
