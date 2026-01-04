@@ -38,6 +38,7 @@ import org.gradle.kotlin.dsl.register
  *
  * // Optional: customize device configuration (these are the defaults)
  * benchmark {
+ *     buildType = "benchmarkRelease"  // Must match androidApp build type
  *     deviceName = "pixel5Api34Ftl"
  *     deviceType = "akita"  // Physical device
  *     apiLevel = 34
@@ -70,7 +71,7 @@ import org.gradle.kotlin.dsl.register
  */
 class AndroidBenchmarkConventionPlugin : Plugin<Project> {
     private companion object {
-        private const val DIRECTORY_TO_PULL_ROOT = "/storage/emulated/0/Android/data"
+        private const val DIRECTORY_TO_PULL_ROOT = "/storage/emulated/0/Android/media"
     }
 
     override fun apply(target: Project) {
@@ -89,7 +90,7 @@ class AndroidBenchmarkConventionPlugin : Plugin<Project> {
                 extensions.configure<TestLabGradlePluginExtension> {
                     testOptions {
                         results {
-                            directoriesToPull.add("$DIRECTORY_TO_PULL_ROOT/$namespace/files")
+                            directoriesToPull.add("$DIRECTORY_TO_PULL_ROOT/$namespace")
                         }
                     }
                 }
@@ -99,11 +100,11 @@ class AndroidBenchmarkConventionPlugin : Plugin<Project> {
                     group = "benchmark"
 
                     val testResultsDir = layout.buildDirectory.dir(
-                        "outputs/androidTest-results/managedDevice/benchmark/${extension.deviceName}/results"
+                        "outputs/androidTest-results/managedDevice/${extension.buildType.lowercase()}/${extension.deviceName}/results"
                     )
 
                     from(testResultsDir) {
-                        include("**/artifacts$DIRECTORY_TO_PULL_ROOT/$namespace/files/$namespace-benchmarkData.json")
+                        include("**/artifacts$DIRECTORY_TO_PULL_ROOT/$namespace/$namespace-benchmarkData.json")
 
                         eachFile {
                             // Flatten directory structure, keep original filename
@@ -121,7 +122,8 @@ class AndroidBenchmarkConventionPlugin : Plugin<Project> {
                 }
 
                 // Find the benchmark Android test task and wire it up
-                tasks.named("${extension.deviceName}BenchmarkAndroidTest") {
+                val capitalizedBuildType = extension.buildType.replaceFirstChar { it.uppercase() }
+                tasks.named("${extension.deviceName}${capitalizedBuildType}AndroidTest") {
                     finalizedBy("copyBenchmarkResults")
                 }
 
@@ -129,7 +131,7 @@ class AndroidBenchmarkConventionPlugin : Plugin<Project> {
                     description = "Runs benchmarks on Firebase Test Lab"
                     group = "benchmark"
 
-                    dependsOn("${extension.deviceName}BenchmarkAndroidTest")
+                    dependsOn("${extension.deviceName}${capitalizedBuildType}AndroidTest")
                     finalizedBy("copyBenchmarkResults")
                 }
             }
@@ -138,6 +140,7 @@ class AndroidBenchmarkConventionPlugin : Plugin<Project> {
 }
 
 open class BenchmarkExtension {
+    var buildType: String = "benchmarkRelease"
     var deviceName: String = "pixel8aApi34Ftl"
     var deviceType: String = "akita"
     var apiLevel: Int = 34

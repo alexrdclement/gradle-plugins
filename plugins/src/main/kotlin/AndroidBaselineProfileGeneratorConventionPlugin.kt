@@ -79,6 +79,7 @@ class AndroidBaselineProfileGeneratorConventionPlugin : Plugin<Project> {
 
                 testOptions {
                     execution = "ANDROIDX_TEST_ORCHESTRATOR"
+                    animationsDisabled = true
                 }
             }
 
