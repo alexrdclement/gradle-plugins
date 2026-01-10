@@ -5,6 +5,7 @@ import org.gradle.api.file.RegularFileProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
@@ -17,6 +18,8 @@ open class GithubReleaseExtension {
     var repository: String? = null
     var newTagRevision: String? = null
     var enabled: Boolean = true
+    var readmeTemplateFile: String = "README.template.md"
+    var readmeOutputFile: String = "README.md"
 }
 
 /**
@@ -40,9 +43,24 @@ open class GithubReleaseExtension {
  * }
  * ```
  *
- * The plugin also registers a custom task `updateReadmeVersion` that updates `{{VERSION}}`
- * placeholders in `README.md` with the current project version.
+ * The plugin also registers an `updateReadmeVersion` task that generates README.md by replacing
+ * all `{{VERSION}}` placeholders in a template file with the current project version.
  *
+ * Create a template file with version placeholders:
+ * ```toml
+ * [versions]
+ * my-library = "{{VERSION}}"
+ * ```
+ *
+ * Update the `githubRelease` extension configuration if needed:
+ * ```kotlin
+ * githubRelease {
+ *    readmeTemplateFile = "docs/README.template.md"
+ *    readmeOutputFile = "docs/README.md"
+ * }
+ * ```
+ *
+ * Run the task to generate the README.md:
  * ```bash
  * ./gradlew updateReadmeVersion
  * ```
@@ -80,18 +98,23 @@ class GithubReleaseConventionPlugin : Plugin<Project> {
 
             val updateReadmeTask = project.tasks.named("updateReadmeVersion", UpdateReadmeVersionTask::class.java).get()
             updateReadmeTask.group = "documentation"
-            updateReadmeTask.description = "Updates `{{VERSION}}` placeholders in README.md with the current project version"
+            updateReadmeTask.description = "Generates README.md from with current version"
             updateReadmeTask.projectVersion.set(project.version.toString())
-            updateReadmeTask.readmeFile.set(project.layout.projectDirectory.file("README.md"))
+            updateReadmeTask.readmeTemplateFile.set(project.layout.projectDirectory.file(extension.readmeTemplateFile))
+            updateReadmeTask.readmeOutputFile.set(project.layout.projectDirectory.file(extension.readmeOutputFile))
         }
     }
 }
 
 /**
- * Updates `{{VERSION}}` placeholders in README.md with the current project version.
+ * Generates README.md from README.template.md, replacing version placeholders.
+ *
+ * Reads [readmeTemplateFile] (which contains `{{VERSION}}` placeholders) and generates
+ * [readmeOutputFile] with all placeholders replaced with the actual project version.
  *
  * @property projectVersion The current project version to insert into the README
- * @property readmeFile The README.md file to update
+ * @property readmeTemplateFile The README.template.md source file with placeholders
+ * @property readmeOutputFile The README.md output file to generate
  */
 abstract class UpdateReadmeVersionTask : DefaultTask() {
     @get:Input
@@ -99,15 +122,19 @@ abstract class UpdateReadmeVersionTask : DefaultTask() {
 
     @get:InputFile
     @get:PathSensitive(PathSensitivity.RELATIVE)
-    abstract val readmeFile: RegularFileProperty
+    abstract val readmeTemplateFile: RegularFileProperty
+
+    @get:OutputFile
+    abstract val readmeOutputFile: RegularFileProperty
 
     @TaskAction
     fun updateVersion() {
-        val file = readmeFile.get().asFile
+        val templateFile = readmeTemplateFile.get().asFile
+        val outputFile = readmeOutputFile.get().asFile
         val currentVersion = projectVersion.get()
-        val content = file.readText()
+        val content = templateFile.readText()
         val updatedContent = content.replace("{{VERSION}}", currentVersion)
-        file.writeText(updatedContent)
-        println("Updated README.md with version $currentVersion")
+        outputFile.writeText(updatedContent)
+        println("Generated README.md from template with version $currentVersion")
     }
 }
