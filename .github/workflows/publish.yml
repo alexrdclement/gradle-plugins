@@ -1,15 +1,12 @@
 name: "Publish"
 on:
-  push:
+  workflow_run:
+    workflows: ["Test"]
+    types:
+      - completed
     branches:
       - main
-    paths-ignore:
-      - '**.md'
-      - 'docs/**'
-  pull_request:
-    paths-ignore:
-      - '**.md'
-      - 'docs/**'
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -19,7 +16,9 @@ jobs:
   publish:
     name: "Publish"
 
-    if: github.ref == 'refs/heads/main'
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.ref == 'refs/heads/main')
 
     runs-on: macos-15
     timeout-minutes: 30
