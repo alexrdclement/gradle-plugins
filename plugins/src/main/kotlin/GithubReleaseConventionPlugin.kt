@@ -9,6 +9,7 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.PathSensitive
 import org.gradle.api.tasks.PathSensitivity
 import org.gradle.api.tasks.TaskAction
+import org.gradle.work.DisableCachingByDefault
 import org.jetbrains.kotlin.gradle.plugin.extraProperties
 import org.shipkit.changelog.GenerateChangelogTask
 import org.shipkit.github.release.GithubReleaseTask
@@ -116,6 +117,7 @@ class GithubReleaseConventionPlugin : Plugin<Project> {
  * @property readmeTemplateFile The README.template.md source file with placeholders
  * @property readmeOutputFile The README.md output file to generate
  */
+@DisableCachingByDefault(because = "Version changes frequently and task execution is fast")
 abstract class UpdateReadmeVersionTask : DefaultTask() {
     @get:Input
     abstract val projectVersion: Property<String>
