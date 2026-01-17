@@ -2,6 +2,7 @@ import com.alexrdclement.gradle.plugin.Libs
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 
@@ -26,23 +27,10 @@ fun Project.configureCompose(multiplatformExtension: ComposeMultiplatformExtensi
     extensions.configure<KotlinMultiplatformExtension> {
         sourceSets.apply {
             getByName("commonMain").dependencies {
-                implementation(multiplatformExtension.uiToolingPreview)
+                implementation(multiplatformExtension.foundation)
                 implementation(multiplatformExtension.runtime)
                 implementation(multiplatformExtension.ui)
-                implementation(multiplatformExtension.foundation)
-            }
-
-            findByName("androidMain")?.apply {
-                dependencies {
-                    implementation(multiplatformExtension.preview)
-
-                    // TODO: revisit in later versions of Otter. See https://issuetracker.google.com/issues/422373442
-                    implementation(multiplatformExtension.uiTooling)
-                    implementation(ComposeMultiplatformExtension.Android.activityCompose)
-                    implementation(ComposeMultiplatformExtension.Android.customview)
-                    implementation(ComposeMultiplatformExtension.Android.emoji2)
-                    implementation(ComposeMultiplatformExtension.Android.uiTestManifest)
-                }
+                implementation(multiplatformExtension.uiToolingPreview)
             }
 
             findByName("jvmMain")?.apply {
@@ -63,16 +51,8 @@ open class ComposeMultiplatformExtension {
     val foundation: String = Libs.composeMultiplatformFoundation
     val runtime: String = Libs.composeMultiplatformRuntime
 
-    val preview: String = Libs.composeMultiplatformUiToolingPreview
     val uiTooling: String = Libs.composeMultiplatformUiTooling
     val uiToolingPreview: String = Libs.composeMultiplatformUiToolingPreview
 
     val desktopCurrentOs: String = Libs.composeMultiplatformDesktop
-
-    object Android {
-        val activityCompose: String = Libs.androidxActivityCompose
-        val customview: String = Libs.androidxCustomview
-        val emoji2: String = Libs.androidxEmoji2
-        val uiTestManifest: String = Libs.composeUiTestManifest
-    }
 }
