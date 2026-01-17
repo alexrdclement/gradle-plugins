@@ -42,6 +42,7 @@ fun Project.configureCompose() {
                     implementation(Libs.androidxActivityCompose)
                     implementation(Libs.androidxCustomview)
                     implementation(Libs.androidxEmoji2)
+                    implementation(Libs.composeUiTestManifest)
                 }
             }
 

@@ -84,6 +84,10 @@ gradlePlugin {
             id = "com.alexrdclement.gradle.plugin.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
         }
+        register("androidComposeTest") {
+            id = "com.alexrdclement.gradle.plugin.android.compose.test"
+            implementationClass = "AndroidComposeTestConventionPlugin"
+        }
         register("androidLibraryTestFixtures") {
             id = "com.alexrdclement.gradle.plugin.android.library.test.fixtures"
             implementationClass = "AndroidLibraryTestFixturesConventionPlugin"
