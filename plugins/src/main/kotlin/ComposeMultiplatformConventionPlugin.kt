@@ -27,15 +27,15 @@ fun Project.configureCompose(multiplatformExtension: ComposeMultiplatformExtensi
     extensions.configure<KotlinMultiplatformExtension> {
         sourceSets.apply {
             getByName("commonMain").dependencies {
-                implementation(multiplatformExtension.foundation)
-                implementation(multiplatformExtension.runtime)
-                implementation(multiplatformExtension.ui)
-                implementation(multiplatformExtension.uiToolingPreview)
+                api(multiplatformExtension.foundation)
+                api(multiplatformExtension.runtime)
+                api(multiplatformExtension.ui)
+                api(multiplatformExtension.uiToolingPreview)
             }
 
             findByName("jvmMain")?.apply {
                 dependencies {
-                    implementation(multiplatformExtension.desktopCurrentOs)
+                    api(multiplatformExtension.desktopCurrentOs)
                 }
             }
         }
