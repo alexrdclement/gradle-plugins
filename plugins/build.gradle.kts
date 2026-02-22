@@ -76,6 +76,10 @@ gradlePlugin {
             id = "com.alexrdclement.gradle.plugin.android.benchmark"
             implementationClass = "AndroidBenchmarkConventionPlugin"
         }
+        register("androidInstrumentedTest") {
+            id = "com.alexrdclement.gradle.plugin.android.instrumented.test"
+            implementationClass = "AndroidInstrumentedTestConventionPlugin"
+        }
         register("androidLibraryCompose") {
             id = "com.alexrdclement.gradle.plugin.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
