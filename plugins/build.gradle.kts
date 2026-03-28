@@ -30,7 +30,6 @@ dependencies {
     implementation(alexrdclementPluginLibs.kotlin.gradle.plugin)
     implementation(alexrdclementPluginLibs.kotlin.multiplatform.plugin)
     implementation(alexrdclementPluginLibs.kotlin.serialization.plugin)
-    implementation(alexrdclementPluginLibs.hilt.gradle.plugin)
     implementation(alexrdclementPluginLibs.ksp.gradle.plugin)
     implementation(alexrdclementPluginLibs.room.gradle.plugin)
     implementation(alexrdclementPluginLibs.shipkit.autoversion.plugin)
@@ -99,14 +98,6 @@ gradlePlugin {
         register("androidTest") {
             id = "com.alexrdclement.gradle.plugin.android.test"
             implementationClass = "AndroidTestConventionPlugin"
-        }
-        register("androidHilt") {
-            id = "com.alexrdclement.gradle.plugin.android.hilt"
-            implementationClass = "AndroidHiltConventionPlugin"
-        }
-        register("androidHiltTestFixtures") {
-            id = "com.alexrdclement.gradle.plugin.android.hilt.test.fixtures"
-            implementationClass = "AndroidHiltTestFixturesConventionPlugin"
         }
         register("androidRoom") {
             id = "com.alexrdclement.gradle.plugin.android.room"
