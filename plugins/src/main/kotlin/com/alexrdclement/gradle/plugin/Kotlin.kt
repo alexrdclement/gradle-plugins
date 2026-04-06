@@ -94,6 +94,8 @@ fun Project.configureKotlin(enableAllWarningsAsErrors: Boolean = false) {
                 allWarningsAsErrors = true
             }
 
+            freeCompilerArgs.add("-Xcontext-parameters")
+
             if (this is KotlinJvmCompilerOptions) {
                 // Target JVM 11 bytecode
                 jvmTarget = JvmTarget.JVM_17
