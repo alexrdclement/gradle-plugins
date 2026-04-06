@@ -80,6 +80,7 @@ private inline fun <reified T : KotlinBaseExtension> Project.configureKotlin() =
         allWarningsAsErrors = warningsAsErrors.toBoolean()
         // Enable detailed names in test-parameter-injector tests
         javaParameters = true
+        freeCompilerArgs.add("-Xcontext-parameters")
         optIn.add("kotlin.time.ExperimentalTime")
     }
 }
