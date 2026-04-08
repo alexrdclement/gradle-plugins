@@ -23,6 +23,11 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 configureKotlinAndroid(this)
                 defaultConfig.targetSdk = AndroidTargetSdk
                 defaultConfig.minSdk = AndroidMinSdk
+                testOptions {
+                    unitTests {
+                        isReturnDefaultValues = true
+                    }
+                }
             }
             extensions.configure<LibraryAndroidComponentsExtension> {
                 disableUnnecessaryAndroidTests(target)
