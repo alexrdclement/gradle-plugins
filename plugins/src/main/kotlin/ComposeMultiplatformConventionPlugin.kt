@@ -3,8 +3,10 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.dependencies
+import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.compose.compiler.gradle.ComposeCompilerGradlePluginExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompilationTask
 
 class ComposeMultiplatformConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) = with(target) {
@@ -22,6 +24,12 @@ class ComposeMultiplatformConventionPlugin : Plugin<Project> {
 fun Project.configureCompose(multiplatformExtension: ComposeMultiplatformExtension) {
     composeCompiler {
         includeSourceInformation.set(true)
+    }
+
+    tasks.withType<KotlinCompilationTask<*>>().configureEach {
+        compilerOptions {
+            optIn.add("androidx.compose.material3.ExperimentalMaterial3ExpressiveApi")
+        }
     }
 
     extensions.configure<KotlinMultiplatformExtension> {
