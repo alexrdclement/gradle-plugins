@@ -4,10 +4,12 @@ import com.alexrdclement.gradle.plugin.IosLibraryTargetConfiguration
 import com.alexrdclement.gradle.plugin.configure
 import com.alexrdclement.gradle.plugin.configureKotlin
 import com.alexrdclement.gradle.plugin.configureKotlinMultiplatformAndroidLibrary
-import com.android.build.api.dsl.androidLibrary
+import com.android.build.api.dsl.KotlinMultiplatformAndroidLibraryExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.ExtensionAware
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.getByType
 import org.gradle.kotlin.dsl.invoke
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -95,9 +97,9 @@ fun Project.libraryTargets(
         applyDefaultHierarchyTemplate()
 
         if (KotlinTarget.ANDROID in enabledTargets) {
-            androidLibrary {
-                configureKotlinMultiplatformAndroidLibrary(this, androidConfiguration)
-            }
+            val androidLibrary = (this as ExtensionAware).extensions
+                .getByType<KotlinMultiplatformAndroidLibraryExtension>()
+            configureKotlinMultiplatformAndroidLibrary(androidLibrary, androidConfiguration)
         }
 
         if (KotlinTarget.JVM in enabledTargets) {
