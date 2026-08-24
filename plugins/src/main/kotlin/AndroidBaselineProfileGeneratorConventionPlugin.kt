@@ -1,4 +1,5 @@
 import androidx.baselineprofile.gradle.producer.BaselineProfileProducerExtension
+import com.alexrdclement.gradle.plugin.Libs
 import com.android.build.api.dsl.TestExtension
 import com.google.firebase.testlab.gradle.TestLabGradlePluginExtension
 import org.gradle.api.Plugin
@@ -6,6 +7,7 @@ import org.gradle.api.Project
 import org.gradle.api.file.CopySpec
 import org.gradle.api.tasks.Copy
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.register
 import java.io.File
 
@@ -68,6 +70,13 @@ class AndroidBaselineProfileGeneratorConventionPlugin : Plugin<Project> {
                 apply("com.alexrdclement.gradle.plugin.android.test")
                 apply("androidx.baselineprofile")
                 apply("com.google.firebase.testlab")
+            }
+
+            dependencies {
+                add("implementation", Libs.androidxTestExtJunit)
+                add("implementation", Libs.androidxTestRunner)
+                add("implementation", Libs.androidxUiautomator)
+                add("implementation", Libs.androidxBenchmarkMacroJunit4)
             }
 
             val extension = extensions.create("baselineProfileGenerator", BaselineProfileGeneratorExtension::class.java)

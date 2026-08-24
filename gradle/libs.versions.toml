@@ -3,7 +3,10 @@ agp = "9.3.2"
 android-tools = "32.3.2"
 androidx-activity = "1.13.0"
 androidx-baselineprofile = "1.5.0-rc01"
+androidx-benchmark = "1.5.0-rc01"
 androidx-emoji2 = "1.6.0"
+androidx-tracing-perfetto = "1.0.1"
+androidx-uiautomator = "2.4.0"
 firebase-testlab = "0.0.1-alpha13"
 androidx-core = "1.19.0"
 androidx-customview = "1.1.0"
@@ -40,7 +43,11 @@ maven-publish-plugin = { group = "com.vanniktech", name = "gradle-maven-publish-
 
 # Applied via convention plugins
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidx-activity" }
+androidx-benchmark-macro-junit4 = { group = "androidx.benchmark", name = "benchmark-macro-junit4", version.ref = "androidx-benchmark" }
 androidx-core = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core" }
+androidx-tracing-perfetto = { group = "androidx.tracing", name = "tracing-perfetto", version.ref = "androidx-tracing-perfetto" }
+androidx-tracing-perfetto-binary = { group = "androidx.tracing", name = "tracing-perfetto-binary", version.ref = "androidx-tracing-perfetto" }
+androidx-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "androidx-uiautomator" }
 androidx-customview = { group = "androidx.customview", name = "customview-poolingcontainer", version.ref = "androidx-customview" }
 androidx-emoji2 = { group = "androidx.emoji2", name = "emoji2", version.ref = "androidx-emoji2" }
 androidx-test-core = { group = "androidx.test", name = "core", version.ref = "androidx-test" }

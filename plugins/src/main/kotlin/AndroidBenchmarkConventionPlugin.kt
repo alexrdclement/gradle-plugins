@@ -1,9 +1,11 @@
+import com.alexrdclement.gradle.plugin.Libs
 import com.android.build.api.dsl.TestExtension
 import com.google.firebase.testlab.gradle.TestLabGradlePluginExtension
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Copy
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.dependencies
 import org.gradle.kotlin.dsl.register
 
 /**
@@ -79,6 +81,15 @@ class AndroidBenchmarkConventionPlugin : Plugin<Project> {
             with(pluginManager) {
                 apply("com.alexrdclement.gradle.plugin.android.test")
                 apply("com.google.firebase.testlab")
+            }
+
+            dependencies {
+                add("implementation", Libs.androidxTestExtJunit)
+                add("implementation", Libs.androidxTestRunner)
+                add("implementation", Libs.androidxUiautomator)
+                add("implementation", Libs.androidxBenchmarkMacroJunit4)
+                add("implementation", Libs.androidxTracingPerfetto)
+                add("implementation", Libs.androidxTracingPerfettoBinary)
             }
 
             val extension = extensions.create("benchmark", BenchmarkExtension::class.java)
