@@ -2,7 +2,7 @@
 agp = "9.3.2"
 android-tools = "32.3.2"
 androidx-activity = "1.13.0"
-androidx-baselineprofile = "1.5.0-rc01"
+androidx-baselineprofile = "1.5.0-rc02"
 androidx-benchmark = "1.5.0-rc02"
 androidx-emoji2 = "1.6.0"
 androidx-tracing-perfetto = "1.0.1"
